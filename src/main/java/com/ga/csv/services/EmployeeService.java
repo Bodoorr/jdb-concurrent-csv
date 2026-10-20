@@ -7,6 +7,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class EmployeeService {
     public void processEmployees(List<Employee> employees){
@@ -14,7 +15,7 @@ public class EmployeeService {
         Semaphore semaphore=new Semaphore(2);
 
         SalaryService salaryService= new SalaryService();
-
+        AtomicInteger processedCount= new AtomicInteger(0);
         for (Employee employee: employees){
             fixedThreadPool.execute(()->{
                 try {
@@ -22,6 +23,8 @@ public class EmployeeService {
                     System.out.println(Thread.currentThread().getName() + " acquired connection.");
                     double newSalary= salaryService.calculateSalary(employee);
                     employee.setSalary(newSalary);
+                    processedCount.incrementAndGet();
+                    System.out.println("Processed employees: "+processedCount.get());
                     System.out.println(employee.getName() + " processed by "+Thread.currentThread().getName());
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
