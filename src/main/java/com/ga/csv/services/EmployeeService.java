@@ -3,10 +3,7 @@ package com.ga.csv.services;
 import com.ga.csv.models.Employee;
 
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -52,5 +49,11 @@ public class EmployeeService {
             });
         }
         fixedThreadPool.shutdown();
+
+        try {
+            fixedThreadPool.awaitTermination(1, TimeUnit.MINUTES);
+        } catch (InterruptedException e){
+            throw new RuntimeException(e);
+        }
     }
 }
