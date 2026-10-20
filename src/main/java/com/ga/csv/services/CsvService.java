@@ -29,4 +29,15 @@ public class CsvService {
         }
         return employees;
     }
+
+    public void writeEmployees(String filename, List<Employee> employees){
+    List<String> lines=new ArrayList<>();
+
+        for (Employee employee: employees){
+            String line= employee.getId()+","+employee.getName()+","+ employee.getSalary()+","+employee.getStartDate()+","+
+                    employee.getRole()+","+employee.getCompletedProject();
+            lines.add(line);
+        }
+        FileManager.overWriteFile(filename, lines);
+    }
 }
